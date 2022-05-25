@@ -8,13 +8,12 @@
     {%if info%}
         {%for i in info%}
             <div>
-                <h1>{{i.song}}</h1>
-                <p>{{i.janr}}</p>
-                <p>{{i.Authors}}</p>
+                <h1>{{i.janr}}</h1>
+                <p>{{i.description}}</p>
             </div>
         {%endfor%}
     {%else%}
-        <p>нет песен</p>
+        <p>нет жанров</p>
     {%endif%}
 </body>
 </html>

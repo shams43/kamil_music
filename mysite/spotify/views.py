@@ -1,34 +1,51 @@
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
-from django.template.loader import render_to_string
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-authors = {
-    'Michael': "Michael's song",
-    'John': "John's song",
-}
+from .models import Song, Author, Janr
+from .forms import AddSongForm, AddJanrForm, AddAuthorForm
 
 
-# Create your views here.
-def mainstr(request):
-    data = {
-        "authors_n": authors.keys()
-    }
-    return render(request, 'spotify/mainstr.html', context=data)
-
-
-def getName(request, name):
-    if authors.get(name):
-        data = {
-            "author": name,
-            "song": authors[name]
-        }
-        return render(request, "spotify/songs.html", context=data)
+def add_janr(request):
+    if request.method == 'POST':
+        form = AddJanrForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                print('something went wrong')
     else:
-        return HttpResponseRedirect('404')
+        form = AddJanrForm()
+    return render(request, 'spotify/add_janr.html', {'form': form})
 
+def add_song(request):
+    if request.method == 'POST':
+        form = AddSongForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                print('something went wrong')
+    else:
+        form = AddSongForm()
+    return render(request, 'spotify/add_song.html', {"form": form})
 
-def getNotFound(request):
-    return HttpResponse(render_to_string('spotify/404.html'))
+def page_of_janrs(request):
+    info=Janr.objects.all()
+    return render(request, "spotify/janrs.html", {"info":info})
 
-
-
+def add_author(request):
+    if request.method == 'POST':
+        form = AddAuthorForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                print('something went wrong')
+    else:
+        form = AddAuthorForm()
+    return render(request, 'spotify/add_author.html', {"form": form})
+def page_of_authors(request):
+    info=Author.objects.all()
+    return render(request, "spotify/authors.html", {"info":info})
+def page_of_songs(request):
+    info=Song.objects.all()
+    return render(request, "spotify/songs.html", {"info":info})
